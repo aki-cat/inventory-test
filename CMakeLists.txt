@@ -4,9 +4,7 @@ project(InventoryTest VERSION 0.0.1)
 file(GLOB_RECURSE UITEST_SOURCE src/*.cxx src/*.h)
 message(STATUS Source: ${UITEST_SOURCE})
 
-add_executable(InventoryTest ${UITEST_SOURCE}
-        src/Sprite.cxx
-        src/Sprite.h)
+add_executable(InventoryTest ${UITEST_SOURCE})
 
 if (MSVC)
     target_compile_options(InventoryTest PRIVATE "/W4" "$<$<CONFIG:RELEASE>:/O2>")
