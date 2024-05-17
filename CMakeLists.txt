@@ -9,5 +9,6 @@ add_executable(UITest ${UITEST_SOURCE})
 target_include_directories(UITest PRIVATE src)
 
 add_subdirectory(third_party/raylib SYSTEM)
-add_dependencies(UITest raylib)
+
+target_link_libraries(UITest raylib_static)
 target_include_directories(UITest SYSTEM PUBLIC third_party/raylib/src)
