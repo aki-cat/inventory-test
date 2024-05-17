@@ -1,12 +1,12 @@
 // Main
 
-#include "Sprite.h"
+#include "graphics/Sprite.h"
 
 #include <raylib.h>
 
 void run_loop() {
-    Sprite inventory_window = Sprite("assets/inventory.png");
-    Sprite bucket = Sprite("assets/items/bucket.png");
+    graphics::Sprite inventory_window = graphics::Sprite("assets/inventory.png");
+    graphics::Sprite bucket = graphics::Sprite("assets/items/bucket.png");
 
     while (!WindowShouldClose()) {
         // Debug quit

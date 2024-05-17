@@ -6,6 +6,8 @@
 
 #include <raylib.h>
 
+using graphics::Sprite;
+
 Sprite::Sprite(const char *path) : _texture() {
     _texture = LoadTexture(path);
 }
