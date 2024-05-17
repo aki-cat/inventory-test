@@ -12,10 +12,10 @@ Sprite::Sprite(const char *path) : _texture() {
     _texture = LoadTexture(path);
 }
 
-void Sprite::draw(int x, int y) const {
-    DrawTexture(_texture, x, y, WHITE);
-}
-
 Sprite::~Sprite() {
     UnloadTexture(_texture);
+}
+
+void Sprite::draw(int x, int y) const {
+    DrawTexture(_texture, x, y, WHITE);
 }

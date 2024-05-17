@@ -5,8 +5,8 @@
 #include <raylib.h>
 
 void run_loop() {
-    graphics::Sprite inventory_window = graphics::Sprite("assets/inventory.png");
-    graphics::Sprite bucket = graphics::Sprite("assets/items/bucket.png");
+    const graphics::Sprite inventory_window = graphics::Sprite("assets/inventory.png");
+    const graphics::Sprite bucket = graphics::Sprite("assets/items/bucket.png");
 
     while (!WindowShouldClose()) {
         // Debug quit
