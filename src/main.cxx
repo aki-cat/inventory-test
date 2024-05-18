@@ -1,12 +1,16 @@
 // Main
 
 #include "graphics/Sprite.h"
+#include "graphics/Drawable.h"
 
 #include <raylib.h>
 
 void run_loop() {
-    const graphics::Sprite inventory_window = graphics::Sprite("assets/inventory.png");
-    const graphics::Sprite bucket = graphics::Sprite("assets/items/bucket.png");
+    graphics::Drawable inventory_window("assets/inventory.png");
+    graphics::Drawable bucket("assets/items/bucket.png");
+    bucket.position.x += 256.f;
+    bucket.position.y += 32.f;
+    bucket.scale = 0.8f;
 
     while (!WindowShouldClose()) {
         // Debug quit
@@ -17,9 +21,12 @@ void run_loop() {
         // Rendering
         BeginDrawing();
 
+        // Clear Background
         ClearBackground(Color{0x20, 0x20, 0x20, 0xff});
-        inventory_window.draw(0, 0);
-        bucket.draw(32, 32);
+
+        // Draw Sprites
+        inventory_window.draw();
+        bucket.draw();
 
         EndDrawing();
     }

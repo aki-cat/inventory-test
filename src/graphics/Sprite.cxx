@@ -1,6 +1,3 @@
-//
-// Created by coffeecat on 16/05/24.
-//
 
 #include "Sprite.h"
 
@@ -8,14 +5,14 @@
 
 using graphics::Sprite;
 
-Sprite::Sprite(const char *path) : _texture() {
-    _texture = LoadTexture(path);
+Sprite::Sprite(const std::string &texture_path) {
+    _texture = LoadTexture(texture_path.c_str());
 }
 
 Sprite::~Sprite() {
     UnloadTexture(_texture);
 }
 
-void Sprite::draw(int x, int y) const {
-    DrawTexture(_texture, x, y, WHITE);
+void Sprite::draw(const Vector2 &position, float scale, float rotation) const {
+    DrawTextureEx(_texture, position, rotation, scale, WHITE);
 }
