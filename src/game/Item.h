@@ -21,7 +21,7 @@ class ItemDatabase {
 public:
     ItemId register_item(const char *name, const char *desc, const char *icon);
 
-    Item get_item(ItemId id);
+    const Item& get_item(ItemId id) const;
 
 private:
     std::size_t _count = 0;
