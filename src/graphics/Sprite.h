@@ -1,6 +1,6 @@
 
-#ifndef UITEST_SPRITE_H
-#define UITEST_SPRITE_H
+#ifndef INVENTORY_TEST_SPRITE_H
+#define INVENTORY_TEST_SPRITE_H
 
 #include <string>
 #include <raylib.h>
@@ -19,4 +19,4 @@ private:
 
 }
 
-#endif //UITEST_SPRITE_H
+#endif //INVENTORY_TEST_SPRITE_H

@@ -1,5 +1,5 @@
-#ifndef INVENTORYTEST_GAMEDATABASE_H
-#define INVENTORYTEST_GAMEDATABASE_H
+#ifndef INVENTORY_TEST_GAMEDATABASE_H
+#define INVENTORY_TEST_GAMEDATABASE_H
 
 #include "game/Item.h"
 
@@ -33,4 +33,4 @@ inline GameDatabase::GameDatabase() : items() {
 }
 
 }
-#endif //INVENTORYTEST_GAMEDATABASE_H
+#endif //INVENTORY_TEST_GAMEDATABASE_H

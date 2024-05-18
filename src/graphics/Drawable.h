@@ -1,5 +1,5 @@
-#ifndef INVENTORYTEST_DRAWABLE_H
-#define INVENTORYTEST_DRAWABLE_H
+#ifndef INVENTORY_TEST_DRAWABLE_H
+#define INVENTORY_TEST_DRAWABLE_H
 
 #include "graphics/Sprite.h"
 
@@ -22,4 +22,4 @@ private:
 
 }
 
-#endif //INVENTORYTEST_DRAWABLE_H
+#endif //INVENTORY_TEST_DRAWABLE_H

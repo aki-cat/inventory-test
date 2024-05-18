@@ -1,5 +1,5 @@
-#ifndef INVENTORYTEST_ITEM_H
-#define INVENTORYTEST_ITEM_H
+#ifndef INVENTORY_TEST_ITEM_H
+#define INVENTORY_TEST_ITEM_H
 
 #include <cstdint>
 #include <string>
@@ -30,4 +30,4 @@ private:
 
 }
 
-#endif //INVENTORYTEST_ITEM_H
+#endif //INVENTORY_TEST_ITEM_H
