@@ -1,7 +1,3 @@
-//
-// Created by coffeecat on 17/05/24.
-//
-
 #ifndef INVENTORYTEST_DRAWABLE_H
 #define INVENTORYTEST_DRAWABLE_H
 
@@ -11,7 +7,8 @@
 
 namespace graphics {
 
-struct Drawable {
+class Drawable {
+public:
     Vector2 position = Vector2{};
     float scale = 1.f;
     float rotation = 0.f;
