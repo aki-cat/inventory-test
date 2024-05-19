@@ -8,6 +8,7 @@ namespace game {
 struct GameDatabase {
     GameDatabase();
 
+    // Here you'd add more readonly stuff regarding the game
     ItemDatabase items;
 };
 
@@ -31,6 +32,8 @@ inline GameDatabase::GameDatabase() : items() {
                         "Could be used as a weapon. Or to disassemble stuff.",
                         "wrench.png");
 }
+
+static const GameDatabase GAME_DATABASE{};
 
 }
 #endif //INVENTORY_TEST_GAMEDATABASE_H
