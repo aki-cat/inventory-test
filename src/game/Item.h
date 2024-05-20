@@ -23,7 +23,7 @@ class ItemDatabase {
 public:
     ItemId register_item(const char *name, const char *desc, const char *icon);
 
-    Item get_item(ItemId id) const;
+    const Item& get_item(ItemId id) const;
     std::vector<ItemId> all_ids() const;
 private:
     size_t _count = 0;

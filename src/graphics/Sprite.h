@@ -1,4 +1,3 @@
-
 #ifndef INVENTORY_TEST_SPRITE_H
 #define INVENTORY_TEST_SPRITE_H
 
@@ -15,6 +14,7 @@ public:
     ~Sprite();
 
     void draw(const Vector2 &position, float scale, float rotation) const;
+    Vector2 get_offset_position(const Vector2 &position, float scale, float rotation) const;
 };
 
 }

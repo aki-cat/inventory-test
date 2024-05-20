@@ -9,7 +9,7 @@ ItemId ItemDatabase::register_item(const char *name, const char *desc, const cha
     return id;
 }
 
-Item ItemDatabase::get_item(ItemId id) const {
+const Item& ItemDatabase::get_item(ItemId id) const {
     return _items.at(id - 1);
 }
 
