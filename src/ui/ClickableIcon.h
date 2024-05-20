@@ -9,7 +9,7 @@ namespace ui {
 
 class ClickableIcon {
 public:
-    graphics::Sprite icon;
+    graphics::Sprite sprite;
     Vector2 collision_size;
 
     explicit ClickableIcon(const std::string &texture_path, Vector2 collision_size);

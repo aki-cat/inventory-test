@@ -1,10 +1,7 @@
 #include "game/Game.h"
 
-#include "common/Math.h"
-#include "graphics/Sprite.h"
 #include "ui/InventoryGui.h"
 
-#include <iostream>
 #include <raylib.h>
 #include <raymath.h>
 
@@ -38,23 +35,7 @@ void Game::run() {
 
     while (!WindowShouldClose()) {
         // Input events
-        for (auto *item: inventory_gui.sprite_backpack_items) {
-            if (item == nullptr) {
-                continue;
-            }
-            Rectangle rect = item->clickable_rect();
-            if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) &&
-                common::is_point_in_rect(GetMousePosition(), rect)) {
-                item->icon.scale = .8f;
-            } else if (abs(item->icon.scale - .5f) > .01f) {
-                item->icon.scale += (.5f - item->icon.scale) * GetFrameTime() * 16;
-            }
-        }
-
-        if (IsKeyReleased(KeyboardKey::KEY_TAB) || IsKeyReleased(KeyboardKey::KEY_ESCAPE) ||
-            IsKeyReleased(KeyboardKey::KEY_I)) {
-            inventory_gui.active = !inventory_gui.active;
-        }
+        inventory_gui.process_input();
 
         // Rendering
         BeginDrawing();

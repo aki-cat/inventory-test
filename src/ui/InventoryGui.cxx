@@ -1,5 +1,7 @@
 #include "ui/InventoryGui.h"
+
 #include "game/GameDatabase.h"
+#include "common/Math.h"
 
 #include <raymath.h>
 
@@ -64,17 +66,36 @@ void InventoryGui::sync() {
         auto &icon_sprite = *new ClickableIcon("items/" + item.icon, {56, 56});
         sprite_backpack_items[slot_index] = &icon_sprite;
 
-        icon_sprite.icon.scale = 0.6f;
-        icon_sprite.icon.offset = item.icon_offset;
+        icon_sprite.sprite.scale = 0.6f;
+        icon_sprite.sprite.offset = item.icon_offset;
 
         const auto x = static_cast<float>(slot_index % 6);
         const auto y = static_cast<float>(slot_index / 6);
         const Vector2 local_pos = {(margin + SLOT_SIZE.x) * x, (margin + SLOT_SIZE.y) * y};
-        icon_sprite.icon.position = Vector2Add(origin, local_pos);
+        icon_sprite.sprite.position = Vector2Add(origin, local_pos);
     }
 }
 
-void InventoryGui::check_input() {
+void InventoryGui::process_input() {
+    if (IsKeyReleased(KeyboardKey::KEY_TAB) || IsKeyReleased(KeyboardKey::KEY_ESCAPE) ||
+        IsKeyReleased(KeyboardKey::KEY_I)) {
+        active = !active;
+    }
+
+    for (auto *item_icon: sprite_backpack_items) {
+        if (item_icon == nullptr) {
+            continue;
+        }
+
+        Rectangle rect = item_icon->clickable_rect();
+
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) &&
+            common::is_point_in_rect(GetMousePosition(), rect)) {
+            item_icon->sprite.scale = .8f;
+        } else if (abs(item_icon->sprite.scale - .5f) > .01f) {
+            item_icon->sprite.scale += (.5f - item_icon->sprite.scale) * GetFrameTime() * 16;
+        }
+    }
 }
 
 } // ui

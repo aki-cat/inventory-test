@@ -21,7 +21,7 @@ public:
 
     void draw() const;
     void sync();
-    void check_input();
+    void process_input();
 };
 
 } // ui
