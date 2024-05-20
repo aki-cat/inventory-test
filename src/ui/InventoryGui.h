@@ -15,6 +15,7 @@ public:
 
     game::Inventory &inventory;
     bool active;
+    int dragging = -1;
 
     explicit InventoryGui(game::Inventory &inventory);
     ~InventoryGui();

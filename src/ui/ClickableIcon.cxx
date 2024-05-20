@@ -15,7 +15,7 @@ Rectangle ClickableIcon::clickable_rect() const {
 
 void ClickableIcon::draw() const {
     sprite.draw();
-    DrawRectangleRec(clickable_rect(), ColorAlpha(RED, 0.333f));
+    // DrawRectangleRec(clickable_rect(), ColorAlpha(RED, 0.333f));
 }
 
 }
