@@ -9,7 +9,7 @@ namespace ui {
 
 static constexpr Vector2 SLOT_SIZE{56.f, 56.f};
 static constexpr Vector2 BACKPACK_SLOTS_ORIGIN{522, 216};
-static constexpr float BACKPACK_SLOTS_MARGIN = 4.f;
+static constexpr Vector2 BACKPACK_SLOTS_MARGIN = {4.f, 2.f};
 
 int get_hovered_slot(Vector2 point);
 Rectangle get_slot_rect(int slot_index);
@@ -122,7 +122,7 @@ void InventoryGui::process_input() {
                 inventory.backpack[slot_index] = inventory.backpack[hovered_slot_index];
                 inventory.backpack[hovered_slot_index] = this_item_id;
 
-                ClickableIcon* hovered_icon = sprite_backpack_items[hovered_slot_index];
+                ClickableIcon *hovered_icon = sprite_backpack_items[hovered_slot_index];
                 sprite_backpack_items[slot_index] = hovered_icon;
                 sprite_backpack_items[hovered_slot_index] = item_icon;
                 if (hovered_icon != nullptr) {
@@ -168,8 +168,8 @@ Rectangle get_slot_rect(int slot_index) {
 Vector2 get_slot_pivot(int slot_index) {
     const int col = slot_index % 6;
     const int row = slot_index / 6;
-    Vector2 slot_position = {(BACKPACK_SLOTS_MARGIN + SLOT_SIZE.x) * static_cast<float>(col),
-                             (BACKPACK_SLOTS_MARGIN + SLOT_SIZE.y) * static_cast<float>(row)};
+    Vector2 slot_position = {(BACKPACK_SLOTS_MARGIN.x + SLOT_SIZE.x) * static_cast<float>(col),
+                             (BACKPACK_SLOTS_MARGIN.y+ SLOT_SIZE.y) * static_cast<float>(row)};
 
     return Vector2Add(slot_position, BACKPACK_SLOTS_ORIGIN);
 }
