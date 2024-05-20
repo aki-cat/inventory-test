@@ -2,6 +2,7 @@
 
 #include "common/Math.h"
 #include "graphics/Sprite.h"
+#include "ui/InventoryGui.h"
 
 #include <iostream>
 #include <raylib.h>
@@ -31,54 +32,28 @@ void Game::init() {
 }
 
 void Game::run() {
-    graphics::Sprite inventory_window("inventory.png");
-    inventory_window.position = {640, 360};
-
-    std::vector<graphics::Sprite *> items{};
-    Vector2 origin{522, 216};
-    Vector2 size{56, 56};
-    Vector2 half_size = Vector2Scale(size, .5f);
-    float margin = 4.f;
-    size_t i = 0;
-    for (const auto &itemId: _state.inventory.backpack) {
-        if (itemId == NoItem) {
-            continue;
-        }
-        const auto &item = GAME_DATABASE.items.get_item(itemId);
-
-        items.emplace_back(new graphics::Sprite("items/" + item.icon, item.icon_offset));
-        graphics::Sprite &icon = *items[i];
-        icon.scale = 0.6f;
-
-        const auto x = static_cast<float>(i % 6);
-        const auto y = static_cast<float>(i / 6);
-        const Vector2 local_pos = {(margin + size.x) * x, (margin + size.y) * y};
-        icon.position = Vector2Add(origin, local_pos);
-
-        i++;
-    }
-
-    std::cout << "items[" << items.size() << "]: " << items.data() << std::endl;
-
-    bool inventory_open = true;
+    ui::InventoryGui inventory_gui = ui::InventoryGui(_state.inventory);
+    inventory_gui.sync();
+    inventory_gui.active = true;
 
     while (!WindowShouldClose()) {
         // Input events
-        for (auto *item: items) {
-            Rectangle rect{
-                    item->position.x - half_size.x, item->position.y - half_size.y,
-                    size.x, size.y
-            };
+        for (auto *item: inventory_gui.sprite_backpack_items) {
+            if (item == nullptr) {
+                continue;
+            }
+            Rectangle rect = item->clickable_rect();
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) &&
                 common::is_point_in_rect(GetMousePosition(), rect)) {
-                item->scale = .8f;
-            } else if (abs(item->scale - .5f) > .01f) {
-                item->scale += (.5f - item->scale) * GetFrameTime() * 16;
+                item->icon.scale = .8f;
+            } else if (abs(item->icon.scale - .5f) > .01f) {
+                item->icon.scale += (.5f - item->icon.scale) * GetFrameTime() * 16;
             }
         }
+
         if (IsKeyReleased(KeyboardKey::KEY_TAB) || IsKeyReleased(KeyboardKey::KEY_ESCAPE) ||
             IsKeyReleased(KeyboardKey::KEY_I)) {
-            inventory_open = !inventory_open;
+            inventory_gui.active = !inventory_gui.active;
         }
 
         // Rendering
@@ -88,29 +63,11 @@ void Game::run() {
         ClearBackground(Color{0x20, 0x20, 0x20, 0xff});
 
         // Draw Sprites
-        if (inventory_open) {
-            inventory_window.draw();
-            for (auto item: items) {
-                item->draw();
-                DrawRectangleRec({
-                                         item->position.x - half_size.x,
-                                         item->position.y - half_size.y,
-                                         size.x, size.y
-                                 }, ColorAlpha(RED, 0.25f));
-            }
-        } else {
-            DrawText("Open inventory with [TAB], [ESCAPE], or [I].",
-                     640 - 256, 360, 24, Color{0xff, 0xff, 0xff, 0x80});
-        }
+        inventory_gui.draw();
 
         DrawFPS(0, 720 - 16);
         EndDrawing();
     }
-
-    for (auto *item: items) {
-        delete item;
-    }
-    items.clear();
 }
 
 } // game
