@@ -63,6 +63,7 @@ void Game::run() {
     bool inventory_open = true;
 
     while (!WindowShouldClose()) {
+        // Input events
         for (auto *item: items) {
             Rectangle rect{
                     item->position.x - half_size.x, item->position.y - half_size.y,
@@ -75,6 +76,10 @@ void Game::run() {
                 item->scale += (0.5f - item->scale) * GetFrameTime() * 8;
             }
         }
+        if (IsKeyReleased(KeyboardKey::KEY_TAB) || IsKeyReleased(KeyboardKey::KEY_ESCAPE) ||
+            IsKeyReleased(KeyboardKey::KEY_I)) {
+            inventory_open = !inventory_open;
+        }
 
         // Rendering
         BeginDrawing();
@@ -83,11 +88,6 @@ void Game::run() {
         ClearBackground(Color{0x20, 0x20, 0x20, 0xff});
 
         // Draw Sprites
-        if (IsKeyReleased(KeyboardKey::KEY_TAB) || IsKeyReleased(KeyboardKey::KEY_ESCAPE) ||
-            IsKeyReleased(KeyboardKey::KEY_I)) {
-            inventory_open = !inventory_open;
-        }
-
         if (inventory_open) {
             inventory_window.draw();
             for (auto item: items) {
