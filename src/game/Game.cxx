@@ -1,9 +1,11 @@
 #include "game/Game.h"
-#include "graphics/Drawable.h"
-#include "common/Math.h"
 
-#include <raylib.h>
+#include "common/Math.h"
+#include "graphics/Sprite.h"
+
 #include <iostream>
+#include <raylib.h>
+#include <raymath.h>
 
 namespace game {
 
@@ -29,11 +31,13 @@ void Game::init() {
 }
 
 void Game::run() {
-    graphics::Drawable inventory_window("assets/inventory.png");
+    graphics::Sprite inventory_window("inventory.png");
     inventory_window.position = {640, 360};
 
-    std::vector<graphics::Drawable *> items{};
+    std::vector<graphics::Sprite *> items{};
     Vector2 origin{522, 216};
+    Vector2 size{56, 56};
+    Vector2 half_size = Vector2Scale(size, .5f);
     float margin = 4.f;
     size_t i = 0;
     for (const auto &itemId: _state.inventory.backpack) {
@@ -42,26 +46,14 @@ void Game::run() {
         }
         const auto &item = GAME_DATABASE.items.get_item(itemId);
 
-        items.emplace_back(new graphics::Drawable("assets/items/" + item.icon));
-        graphics::Drawable &icon = *items[i];
-        icon.size = {56, 56};
+        items.emplace_back(new graphics::Sprite("items/" + item.icon));
+        graphics::Sprite &icon = *items[i];
         icon.scale = 0.6f;
 
         const auto x = static_cast<float>(i % 6);
         const auto y = static_cast<float>(i / 6);
-        const Vector2 local_pos = {(margin + icon.size.x) * x, (margin + icon.size.y) * y};
-        std::cout << "dimensions | width: " << icon.size.x << ", height: " << icon.size.y
-                  << std::endl;
-        std::cout << "(col,row) | x: " << x << ", y: " << y << std::endl;
-        std::cout << "local_pos | x: " << local_pos.x << ", y: " << local_pos.y << std::endl;
+        const Vector2 local_pos = {(margin + size.x) * x, (margin + size.y) * y};
         icon.position = Vector2Add(origin, local_pos);
-
-        const auto rect = icon.rect();
-        std::cout << "icon.position | x: " << icon.position.x << ", y: " << icon.position.y
-                  << std::endl;
-        std::cout << "icon.scale | x: " << icon.scale << ", icon.rotation: " << icon.rotation
-                  << std::endl;
-        std::cout << "icon.rect | x: " << rect.x << ", y: " << rect.y << std::endl;
 
         i++;
     }
@@ -72,8 +64,12 @@ void Game::run() {
 
     while (!WindowShouldClose()) {
         for (auto *item: items) {
+            Rectangle rect{
+                    item->position.x - half_size.x, item->position.y - half_size.y,
+                    size.x, size.y
+            };
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) &&
-                common::is_point_in_rect(GetMousePosition(), item->rect())) {
+                common::is_point_in_rect(GetMousePosition(), rect)) {
                 item->scale = 1.f;
             } else {
                 item->scale += (0.5f - item->scale) * GetFrameTime() * 8;
@@ -94,10 +90,13 @@ void Game::run() {
 
         if (inventory_open) {
             inventory_window.draw();
-            float cr = 0.f;
             for (auto item: items) {
-                cr += 1.f;
                 item->draw();
+                Rectangle rect{
+                        item->position.x - half_size.x, item->position.y - half_size.y,
+                        size.x, size.y
+                };
+                DrawRectangleRec(rect, ColorAlpha(RED, 0.5f));
             }
         } else {
             DrawText("Open inventory with [TAB], [ESCAPE], or [I].",

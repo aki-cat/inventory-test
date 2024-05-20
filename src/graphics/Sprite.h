@@ -9,12 +9,17 @@ namespace graphics {
 class Sprite {
 public:
     Texture2D texture{};
+    Vector2 position = Vector2{};
+    Vector2 offset = Vector2{}; // offset is normalized!!
+    float scale = 1.f;
+    float rotation = 0.f;
 
     explicit Sprite(const std::string &texture_path);
+    Sprite(const std::string &texture_path, Vector2 offset);
     ~Sprite();
 
-    void draw(const Vector2 &position, float scale, float rotation) const;
-    Vector2 get_offset_position(const Vector2 &position, float scale, float rotation) const;
+    void draw() const;
+    Vector2 get_offset_position() const;
 };
 
 }
