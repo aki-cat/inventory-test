@@ -18,11 +18,11 @@ Sprite::~Sprite() {
 void Sprite::draw() const {
     const Vector2 offset_position = get_offset_position();
     DrawTextureEx(texture, offset_position, rotation, scale, WHITE);
-    DrawCircle(static_cast<int>(position.x), static_cast<int>(position.y), 2.f, BLUE);
-    DrawCircle(static_cast<int>(offset_position.x), static_cast<int>(offset_position.y), 2.f, RED);
-    DrawCircle(static_cast<int>(offset_position.x + static_cast<float>(texture.width) * scale),
-               static_cast<int>(offset_position.y + static_cast<float>(texture.height) * scale),
-               2.f, RED);
+    // DrawCircle(static_cast<int>(position.x), static_cast<int>(position.y), 2.f, BLUE);
+    // DrawCircle(static_cast<int>(offset_position.x), static_cast<int>(offset_position.y), 2.f, RED);
+    // DrawCircle(static_cast<int>(offset_position.x + static_cast<float>(texture.width) * scale),
+    //            static_cast<int>(offset_position.y + static_cast<float>(texture.height) * scale),
+    //            2.f, RED);
 }
 
 Vector2 Sprite::get_offset_position() const {

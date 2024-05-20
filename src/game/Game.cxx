@@ -46,7 +46,7 @@ void Game::run() {
         }
         const auto &item = GAME_DATABASE.items.get_item(itemId);
 
-        items.emplace_back(new graphics::Sprite("items/" + item.icon));
+        items.emplace_back(new graphics::Sprite("items/" + item.icon, item.icon_offset));
         graphics::Sprite &icon = *items[i];
         icon.scale = 0.6f;
 
@@ -71,9 +71,9 @@ void Game::run() {
             };
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) &&
                 common::is_point_in_rect(GetMousePosition(), rect)) {
-                item->scale = 1.f;
-            } else {
-                item->scale += (0.5f - item->scale) * GetFrameTime() * 8;
+                item->scale = .8f;
+            } else if (abs(item->scale - .5f) > .01f) {
+                item->scale += (.5f - item->scale) * GetFrameTime() * 16;
             }
         }
         if (IsKeyReleased(KeyboardKey::KEY_TAB) || IsKeyReleased(KeyboardKey::KEY_ESCAPE) ||
@@ -92,11 +92,11 @@ void Game::run() {
             inventory_window.draw();
             for (auto item: items) {
                 item->draw();
-                Rectangle rect{
-                        item->position.x - half_size.x, item->position.y - half_size.y,
-                        size.x, size.y
-                };
-                DrawRectangleRec(rect, ColorAlpha(RED, 0.5f));
+                DrawRectangleRec({
+                                         item->position.x - half_size.x,
+                                         item->position.y - half_size.y,
+                                         size.x, size.y
+                                 }, ColorAlpha(RED, 0.25f));
             }
         } else {
             DrawText("Open inventory with [TAB], [ESCAPE], or [I].",
