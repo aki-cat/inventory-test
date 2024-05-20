@@ -3,7 +3,6 @@
 
 #include "game/GameDatabase.h"
 #include "game/GameState.h"
-#include "ui/Ui.h"
 
 namespace game {
 
@@ -16,7 +15,6 @@ public:
     void run();
 private:
     GameState _state;
-    ui::Ui _ui;
 };
 
 } // game

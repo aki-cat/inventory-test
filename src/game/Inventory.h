@@ -3,7 +3,6 @@
 
 #include "game/Item.h"
 #include "graphics/Sprite.h"
-#include "ui/ItemSlot.h"
 
 #include <array>
 
