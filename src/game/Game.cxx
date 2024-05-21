@@ -46,7 +46,7 @@ void Game::run() {
         // Draw Sprites
         inventory_gui.draw();
 
-        DrawFPS(0, 720 - 16);
+        // DrawFPS(0, 720 - 16);
         EndDrawing();
     }
 }
