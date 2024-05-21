@@ -7,6 +7,17 @@
 
 namespace ui {
 
+struct SlotInfo {
+    int index = -1;
+    enum SlotType {
+        None,
+        Backpack,
+        Belt,
+    } type = None;
+
+    bool valid() const { return index != -1 && type != None; }
+};
+
 class InventoryGui {
 public:
     ClickableIcon *sprite_backpack_items[game::BACKPACK_SIZE] = {nullptr};
@@ -14,8 +25,8 @@ public:
     graphics::Sprite sprite_window;
 
     game::Inventory &inventory;
+    SlotInfo dragging = {};
     bool active;
-    int dragging = -1;
 
     explicit InventoryGui(game::Inventory &inventory);
     ~InventoryGui();
@@ -23,6 +34,9 @@ public:
     void draw() const;
     void sync();
     void process_input();
+    bool process_slot_input(SlotInfo slot_info);
+    void swap_slots(SlotInfo, SlotInfo);
+    void setup_slot(game::ItemId item_id, SlotInfo slot_info);
 };
 
 } // ui

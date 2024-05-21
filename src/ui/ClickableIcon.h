@@ -14,6 +14,11 @@ public:
     bool moved = false;
 
     explicit ClickableIcon(const std::string &texture_path, Vector2 collision_size);
+    ClickableIcon(const ClickableIcon &) = delete;
+    ClickableIcon(ClickableIcon &) = delete;
+    ClickableIcon &operator=(ClickableIcon &) = delete;
+    const ClickableIcon &operator=(const ClickableIcon &) = delete;
+
     Rectangle clickable_rect() const;
     void draw() const;
 };

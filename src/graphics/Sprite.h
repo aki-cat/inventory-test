@@ -16,6 +16,12 @@ public:
 
     explicit Sprite(const std::string &texture_path);
     Sprite(const std::string &texture_path, Vector2 offset);
+
+    Sprite(const Sprite &) = delete;
+    Sprite(Sprite &) = delete;
+    Sprite &operator=(Sprite &) = delete;
+    const Sprite &operator=(const Sprite &) = delete;
+
     ~Sprite();
 
     void draw() const;

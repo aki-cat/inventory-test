@@ -12,8 +12,8 @@ constexpr size_t BACKPACK_SIZE = 30;
 constexpr size_t BELT_SIZE = 10;
 
 struct Inventory {
-    std::array<game::ItemId, BACKPACK_SIZE> backpack = {NoItem};
-    std::array<game::ItemId, BELT_SIZE> belt = {NoItem};
+    game::ItemId backpack[BACKPACK_SIZE] = {NoItem};
+    game::ItemId belt[BELT_SIZE] = {NoItem};
 };
 
 }
