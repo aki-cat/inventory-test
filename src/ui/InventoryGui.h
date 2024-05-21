@@ -13,7 +13,6 @@ public:
     ClickableIcon *sprite_backpack_items[game::BACKPACK_SIZE] = {nullptr};
     ClickableIcon *sprite_belt_items[game::BELT_SIZE] = {nullptr};
     graphics::Sprite sprite_window;
-    Font font;
 
     game::Inventory &inventory;
     SlotInfo dragging = {};

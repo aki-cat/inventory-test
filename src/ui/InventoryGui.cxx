@@ -24,15 +24,12 @@ static const std::unordered_map<KeyboardKey, int> HOTKEYS{
 
 InventoryGui::InventoryGui(game::Inventory &inventory) :
         sprite_window(graphics::Sprite("inventory.png")),
-        font(LoadFont("assets/font/MinecraftRegular-Bmg3.otf")),
         inventory(inventory),
         active(false) {
-    TraceLog(LOG_INFO, "font %s", font);
     sprite_window.position = {640, 360};
 }
 
 InventoryGui::~InventoryGui() {
-    UnloadFont(font);
     for (auto *slot_icon: sprite_backpack_items) {
         delete slot_icon;
     }
@@ -91,7 +88,6 @@ void InventoryGui::draw_interactions() const {
 }
 
 void InventoryGui::draw_description() const {
-
     if (selected.valid()) {
         game::ItemId *item_container;
         switch (selected.type) {
@@ -107,8 +103,16 @@ void InventoryGui::draw_description() const {
         game::ItemId item_id = item_container[selected.index];
 
         const game::Item &item_info = game::GAME_DATABASE.items.get_item(item_id);
-        DrawTextEx(font, item_info.name.c_str(), Vector2{308., 232.}, 20, 4., WHITE);
-        DrawTextEx(font, item_info.desc.c_str(), Vector2{308., 264.}, 16, 4., WHITE);
+
+        /*
+         * Note: Ideally I would want to implement a text object that knows how to wrap itself by word given a certain width.
+         * Of course I do not have the _time_ to implement such a complex feature from scratch, and Raylib unfortunately does
+         * not have that functionality out of the box. Also raylib's line height for text sucks and I am mad that I don't have
+         * the time to fix it.
+         * */
+        Font font = GetFontDefault();
+        DrawTextEx(font, item_info.name.c_str(), Vector2{308., 232.}, 20, 4., BLACK);
+        DrawTextEx(font, item_info.desc.c_str(), Vector2{308., 296.}, 18, 4., BLACK);
     }
 }
 
