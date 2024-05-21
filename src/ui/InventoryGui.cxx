@@ -107,8 +107,7 @@ void InventoryGui::draw_description() const {
         /*
          * Note: Ideally I would want to implement a text object that knows how to wrap itself by word given a certain width.
          * Of course I do not have the _time_ to implement such a complex feature from scratch, and Raylib unfortunately does
-         * not have that functionality out of the box. Also raylib's line height for text sucks and I am mad that I don't have
-         * the time to fix it.
+         * not have that functionality out of the box. Also raylib's line height config for text sucks (AKA it does not exist).
          * */
         Font font = GetFontDefault();
         DrawTextEx(font, item_info.name.c_str(), Vector2{308., 232.}, 20, 4., BLACK);
