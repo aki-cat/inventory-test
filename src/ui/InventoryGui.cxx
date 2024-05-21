@@ -7,14 +7,8 @@
 
 namespace ui {
 
-static constexpr Vector2 SLOT_SIZE{56.f, 56.f};
-static constexpr Vector2 BACKPACK_SLOTS_ORIGIN{522., 216.};
-static constexpr Vector2 BACKPACK_SLOTS_MARGIN = {4.f, 2.f};
-static constexpr Vector2 BELT_SLOTS_ORIGIN{390., 512.};
-static constexpr Vector2 BELT_SLOTS_MARGIN = {4.f, 2.f};
-static constexpr int BACKPACK_COLUMN_COUNT = 6;
+// Forward delcaration of helper functions
 
-// helper math functions
 SlotInfo get_hovered_slot(Vector2 point);
 Rectangle get_slot_rect(SlotInfo slot_info);
 Vector2 get_slot_pivot(SlotInfo slot_info);
@@ -24,6 +18,8 @@ Vector2 get_belt_slot_pivot(int slot_index);
 
 Rectangle get_backpack_slot_rect(int slot_index);
 Vector2 get_backpack_slot_pivot(int slot_index);
+
+// Methods
 
 InventoryGui::InventoryGui(game::Inventory &inventory) :
         sprite_window(graphics::Sprite("inventory.png")),
@@ -217,7 +213,7 @@ bool InventoryGui::process_slot_input(const SlotInfo slot_info) {
     }
 
     if (!dragging.valid() && abs(item_icon->sprite.scale - .6f) > .001f) {
-        item_icon->sprite.scale += (.6f - item_icon->sprite.scale) * GetFrameTime() * 16;
+        item_icon->sprite.scale += (.6f - item_icon->sprite.scale) * GetFrameTime() * 24;
     }
     return dirty;
 }
@@ -265,6 +261,8 @@ void InventoryGui::swap_slots(SlotInfo lhs, SlotInfo rhs) {
         slot_container_rhs[rhs.index]->moved = true;
     }
 }
+
+// Helper functions
 
 SlotInfo get_hovered_slot(Vector2 point) {
     for (int slot_index = 0; slot_index < static_cast<int>(game::BACKPACK_SIZE); slot_index++) {
