@@ -40,8 +40,8 @@ InventoryGui::~InventoryGui() {
 
 void InventoryGui::draw() const {
     if (!active) {
-        DrawText("Open inventory with [TAB], [ESCAPE], or [I].",
-                 640 - 256, 360, 24, Color{0xff, 0xff, 0xff, 0x80});
+        DrawText("Open/Close inventory with [TAB], [ESCAPE], or [I].",
+                 640 - 288, 360, 24, Color{0xff, 0xff, 0xff, 0x80});
         return;
     }
 

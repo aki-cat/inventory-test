@@ -31,7 +31,7 @@ void Game::init() {
 void Game::run() {
     ui::InventoryGui inventory_gui = ui::InventoryGui(_state.inventory);
     inventory_gui.sync();
-    inventory_gui.active = true;
+    inventory_gui.active = false;
 
     while (!WindowShouldClose()) {
         // Input events
