@@ -4,17 +4,15 @@
 #include "common/Math.h"
 
 #include <raymath.h>
-#include <sstream>
-#include <iostream>
 
 namespace ui {
 
 static constexpr Vector2 SLOT_SIZE{56.f, 56.f};
-static constexpr Vector2 BACKPACK_SLOTS_ORIGIN{522, 216};
+static constexpr Vector2 BACKPACK_SLOTS_ORIGIN{522., 216.};
 static constexpr Vector2 BACKPACK_SLOTS_MARGIN = {4.f, 2.f};
-static constexpr int BACKPACK_COLUMN_COUNT = 6;
 static constexpr Vector2 BELT_SLOTS_ORIGIN{390., 512.};
 static constexpr Vector2 BELT_SLOTS_MARGIN = {4.f, 2.f};
+static constexpr int BACKPACK_COLUMN_COUNT = 6;
 
 // helper math functions
 SlotInfo get_hovered_slot(Vector2 point);
@@ -149,25 +147,8 @@ void InventoryGui::process_input() {
         active = !active;
     }
 
-    if (IsKeyReleased(KeyboardKey::KEY_F5)) {
-        std::stringstream stream{};
-
-        stream << "\n";
-        stream << "backpack: { ";
-        for (int slot_index = 0; slot_index < static_cast<int>(game::BACKPACK_SIZE); slot_index++) {
-            if (slot_index % 6 == 0) {
-                stream << "\n";
-            }
-            stream << sprite_backpack_items[slot_index] << ", ";
-        }
-        stream << "}\n";
-        stream << "belt: { ";
-        for (const auto &slot: sprite_belt_items) {
-            stream << slot << ", ";
-        }
-        stream << "}\n\n";
-
-        std::cout << stream.str() << std::endl;
+    if (!active) {
+        return;
     }
 
     bool dirty = false;
