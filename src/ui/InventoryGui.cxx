@@ -5,16 +5,34 @@
 #include "ui/SlotInfo.h"
 
 #include <raymath.h>
+#include <unordered_map>
 
 namespace ui {
 
+static const std::unordered_map<KeyboardKey, int> HOTKEYS{
+        {KeyboardKey::KEY_ONE,   0},
+        {KeyboardKey::KEY_TWO,   1},
+        {KeyboardKey::KEY_THREE, 2},
+        {KeyboardKey::KEY_FOUR,  3},
+        {KeyboardKey::KEY_FIVE,  4},
+        {KeyboardKey::KEY_SIX,   5},
+        {KeyboardKey::KEY_SEVEN, 6},
+        {KeyboardKey::KEY_EIGHT, 7},
+        {KeyboardKey::KEY_NINE,  8},
+        {KeyboardKey::KEY_ZERO,  9},
+};
+
 InventoryGui::InventoryGui(game::Inventory &inventory) :
         sprite_window(graphics::Sprite("inventory.png")),
+        font(LoadFont("assets/font/MinecraftRegular-Bmg3.otf")),
         inventory(inventory),
         active(false) {
+    TraceLog(LOG_INFO, "font %s", font);
+    sprite_window.position = {640, 360};
 }
 
 InventoryGui::~InventoryGui() {
+    UnloadFont(font);
     for (auto *slot_icon: sprite_backpack_items) {
         delete slot_icon;
     }
@@ -32,20 +50,8 @@ void InventoryGui::draw() const {
 
     sprite_window.draw();
 
-    if (dragging.valid()) {
-        const Rectangle origin_rect = get_slot_rect(dragging);
-        DrawRectangleLinesEx(origin_rect, 2.f, ColorAlpha(BLUE, .5f));
-
-        Vector2 mouse_pos = GetMousePosition();
-        auto hovered_slot = get_hovered_slot(mouse_pos);
-        if (hovered_slot.index != -1) {
-            const Rectangle target_rect =
-                    hovered_slot.type == SlotInfo::Backpack
-                    ? get_backpack_slot_rect(hovered_slot.index)
-                    : get_belt_slot_rect(hovered_slot.index);
-            DrawRectangleLinesEx(target_rect, 2.f, ColorAlpha(YELLOW, .5f));
-        }
-    }
+    draw_interactions();
+    draw_description();
 
     for (ClickableIcon *item_icon: sprite_backpack_items) {
         if (item_icon == nullptr) {
@@ -62,12 +68,55 @@ void InventoryGui::draw() const {
     }
 }
 
+void InventoryGui::draw_interactions() const {
+    if (selected.valid() && !dragging.valid()) {
+        const Rectangle origin_rect = get_slot_rect(selected);
+        DrawRectangleLinesEx(origin_rect, 2.f, ColorAlpha(BLUE, .5f));
+    }
+
+    if (dragging.valid()) {
+        const Rectangle origin_rect = get_slot_rect(dragging);
+        DrawRectangleLinesEx(origin_rect, 2.f, ColorAlpha(BLUE, .5f));
+
+        Vector2 mouse_pos = GetMousePosition();
+        auto hovered_slot = get_hovered_slot(mouse_pos);
+        if (hovered_slot.index != -1) {
+            const Rectangle target_rect =
+                    hovered_slot.type == SlotInfo::Backpack
+                    ? get_backpack_slot_rect(hovered_slot.index)
+                    : get_belt_slot_rect(hovered_slot.index);
+            DrawRectangleLinesEx(target_rect, 2.f, ColorAlpha(YELLOW, .5f));
+        }
+    }
+}
+
+void InventoryGui::draw_description() const {
+
+    if (selected.valid()) {
+        game::ItemId *item_container;
+        switch (selected.type) {
+            case SlotInfo::None:
+                throw;
+            case SlotInfo::Backpack:
+                item_container = inventory.backpack;
+                break;
+            case SlotInfo::Belt:
+                item_container = inventory.belt;
+                break;
+        }
+        game::ItemId item_id = item_container[selected.index];
+
+        const game::Item &item_info = game::GAME_DATABASE.items.get_item(item_id);
+        DrawTextEx(font, item_info.name.c_str(), Vector2{308., 232.}, 20, 4., WHITE);
+        DrawTextEx(font, item_info.desc.c_str(), Vector2{308., 264.}, 16, 4., WHITE);
+    }
+}
+
 /**
  * Syncs visuals with actual inventory.
  * Slow and messes with memory, so shouldn't be called frequently.
  */
 void InventoryGui::sync() {
-    sprite_window.position = {640, 360};
 
     // backpack items
     for (int slot_index = 0; slot_index < static_cast<int>(game::BACKPACK_SIZE); slot_index++) {
@@ -79,7 +128,7 @@ void InventoryGui::sync() {
     }
 
     // belt items
-    for (int slot_index = 0; slot_index < static_cast<int>( game::BELT_SIZE); slot_index++) {
+    for (int slot_index = 0; slot_index < static_cast<int>(game::BELT_SIZE); slot_index++) {
         game::ItemId item_id = inventory.belt[slot_index];
         setup_slot(item_id, {
                 slot_index,
@@ -134,6 +183,21 @@ void InventoryGui::process_input() {
         return;
     }
 
+    if (!dragging.valid()) {
+        for (const auto &pair: HOTKEYS) {
+            if (IsKeyPressed(pair.first)) {
+                ClickableIcon *belt_slot = sprite_belt_items[pair.second];
+                if (belt_slot != nullptr) {
+                    selected = {
+                            pair.second,
+                            SlotInfo::Belt
+                    };
+                    belt_slot->sprite.scale = .75f;
+                }
+            }
+        }
+    }
+
     bool dirty = false;
 
     // backpack items
@@ -186,15 +250,22 @@ bool InventoryGui::process_slot_input(const SlotInfo slot_info) {
         && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)
         && common::is_point_in_rect(mouse_pos, rect)) {
         dragging = slot_info;
+        selected = slot_info;
         item_icon->sprite.scale = .75f;
     }
 
     if (dragging.index == slot_info.index && dragging.type == slot_info.type
         && IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
         SlotInfo hovered_slot = get_hovered_slot(mouse_pos);
+
         if (hovered_slot.valid()) {
-            swap_slots(slot_info, hovered_slot);
-            dirty = true;
+            selected = hovered_slot;
+            if (hovered_slot.type != slot_info.type || hovered_slot.index != slot_info.index) {
+                swap_slots(slot_info, hovered_slot);
+                dirty = true;
+            }
+        } else {
+            selected = {-1, SlotInfo::None};
         }
         dragging = {-1, SlotInfo::None};
     }
@@ -248,6 +319,5 @@ void InventoryGui::swap_slots(SlotInfo lhs, SlotInfo rhs) {
         slot_container_rhs[rhs.index]->moved = true;
     }
 }
-
 
 } // ui
